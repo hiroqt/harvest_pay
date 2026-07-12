@@ -32,33 +32,93 @@ Rural agricultural trade in Southeast Asia still runs on paper receipts and dela
 - Soroban CLI v21+ (`cargo install --locked soroban-cli`)
 - A funded Stellar testnet account (via [Friendbot](https://friendbot.stellar.org))
 
-## Build
+## Setup Instructions (Run Locally)
+
+### 1. Clone the repository
 
 ```bash
+git clone <repository-url>
+cd harvest_pay
+```
+
+### 2. Install dependencies
+
+Ensure you have Rust installed with the WebAssembly target:
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+Install Soroban CLI:
+
+```bash
+cargo install --locked soroban-cli
+```
+
+### 3. Build the contract
+
+```bash
+cd contracts/harvet_pay
 soroban contract build
 ```
 
-## Test
+This generates the WASM file at `target/wasm32-unknown-unknown/release/harvestpay.wasm`.
+
+### 4. Run tests
 
 ```bash
 cargo test
 ```
 
-## Deploy to testnet
+### 5. Deploy to Stellar Testnet
+
+Configure your Stellar testnet identity (if not already done):
+
+```bash
+soroban keys generate --global <YOUR_IDENTITY_NAME> --network testnet
+```
+
+Fund your account via Friendbot:
+
+```bash
+soroban keys fund <YOUR_IDENTITY_NAME> --network testnet
+```
+
+Deploy the contract:
 
 ```bash
 soroban contract deploy \
   --wasm target/wasm32-unknown-unknown/release/harvestpay.wasm \
-  --source <YOUR_SECRET_KEY> \
+  --source <YOUR_IDENTITY_NAME> \
   --network testnet
 ```
 
-## Sample CLI invocation
+## Live Testnet Deployment
+
+The contract has been successfully deployed to Stellar testnet:
+
+**Contract Address:** `CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN`
+
+### Deployment Transactions
+
+**Upload WASM Transaction:**
+- Transaction Hash: `a4523a91ba1c37efe7e0a6af8daa390be11d9105199cc5c6959eba2f6e7bcd0f`
+- 🔗 [View on Stellar Expert](https://stellar.expert/explorer/testnet/tx/a4523a91ba1c37efe7e0a6af8daa390be11d9105199cc5c6959eba2f6e7bcd0f)
+
+**Deploy Contract Transaction:**
+- Transaction Hash: `9d0b1b5aa2e31725085e3555dec11107bfc3888b8be18c8a1fd68e13d5690946`
+- WASM Hash: `b639aecc3630a3922332aefa78509051173fe5218c810f7797e77b1e63cb042f`
+- 🔗 [View on Stellar Expert](https://stellar.expert/explorer/testnet/tx/9d0b1b5aa2e31725085e3555dec11107bfc3888b8be18c8a1fd68e13d5690946)
+- 🔗 [View Contract on Stellar Lab](https://lab.stellar.org/r/testnet/contract/CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN)
+
+## Sample CLI Usage
+
+### Create an escrow
 
 ```bash
 soroban contract invoke \
-  --id <CONTRACT_ID> \
-  --source <BUYER_SECRET_KEY> \
+  --id CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN \
+  --source <BUYER_IDENTITY> \
   --network testnet \
   -- \
   create_escrow \
@@ -68,18 +128,67 @@ soroban contract invoke \
   --amount 5000000000
 ```
 
-Then, once the harvest is delivered:
+### Confirm delivery and release funds
+
+Once the harvest is delivered:
 
 ```bash
 soroban contract invoke \
-  --id <CONTRACT_ID> \
-  --source <BUYER_SECRET_KEY> \
+  --id CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN \
+  --source <BUYER_IDENTITY> \
   --network testnet \
   -- \
   confirm_delivery \
   --escrow_id 0 \
   --buyer <BUYER_ADDRESS>
 ```
+
+### Cancel an escrow
+
+If the delivery is rejected or doesn't happen:
+
+```bash
+soroban contract invoke \
+  --id CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN \
+  --source <BUYER_IDENTITY> \
+  --network testnet \
+  -- \
+  cancel_escrow \
+  --escrow_id 0 \
+  --buyer <BUYER_ADDRESS>
+```
+
+## Screenshots
+
+### Wallet Connected State & Balance Display
+
+![Freighter Wallet](docs/wallet-connected.png)
+
+Freighter wallet showing:
+- ✅ Connected to **Account 1**
+- 💰 Balance: **10,000 XLM** displayed
+- Available actions: Add, Send, Swap, History
+- Ready for testnet interactions with HarvestPay contract
+
+### Successful Testnet Deployment
+
+![Deployment Success](docs/deployment-success.png)
+
+The deployment process showing:
+- ✅ WASM upload transaction submitted successfully
+- ✅ Contract deployed with address `CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN`
+- 🔗 Transaction links for verification on Stellar Expert
+
+### Transaction Result on Stellar Expert
+
+![Transaction Details](docs/transaction-details.png)
+
+Stellar Expert showing the successful upload transaction with:
+- Status: ✅ Successful
+- Ledger: 9798128
+- Sequence Number: 1593259200741297
+- Transaction size: 7,044 bytes
+- Operation: Contract code upload (`OP_INVOKE_HOST_FUNCTION`)
 
 ## License
 
