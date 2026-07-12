@@ -162,33 +162,30 @@ soroban contract invoke \
 
 ### Wallet Connected State & Balance Display
 
-![Freighter Wallet](docs/wallet-connected.png)
+![Freighter Wallet - Connected with 10,000 XLM](docs/images/wallet.png)
 
-Freighter wallet showing:
-- ✅ Connected to **Account 1**
-- 💰 Balance: **10,000 XLM** displayed
-- Available actions: Add, Send, Swap, History
-- Ready for testnet interactions with HarvestPay contract
+**Freighter Wallet** showing:
+- ✅ **Account 1** connected
+- 💰 **10,000 XLM** balance displayed
+- Wallet actions available: Add, Send, Swap, History
+- Ready for testnet contract interactions
 
 ### Successful Testnet Deployment
 
-![Deployment Success](docs/deployment-success.png)
+![Contract Deployment Terminal Output](docs/images/deployment_success.png)
 
-The deployment process showing:
-- ✅ WASM upload transaction submitted successfully
-- ✅ Contract deployed with address `CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN`
-- 🔗 Transaction links for verification on Stellar Expert
+**Deployment terminal output** showing:
+```
+✅ Transaction submitted successfully!
+🔗 https://stellar.expert/explorer/testnet/tx/a4523a91ba1c37efe7e0a6af8daa390be11d9105199cc5c6959eba2f6e7bcd0f
 
-### Transaction Result on Stellar Expert
+ℹ️  Deploying contract using wasm hash b639aecc3630a3922332aefa78509051173fe5218c810f7797e77b1e63cb042f
+✅ Transaction submitted successfully!
+🔗 https://stellar.expert/explorer/testnet/tx/9d0b1b5aa2e31725085e3555dec11107bfc3888b8be18c8a1fd68e13d5690946
 
-![Transaction Details](docs/transaction-details.png)
-
-Stellar Expert showing the successful upload transaction with:
-- Status: ✅ Successful
-- Ledger: 9798128
-- Sequence Number: 1593259200741297
-- Transaction size: 7,044 bytes
-- Operation: Contract code upload (`OP_INVOKE_HOST_FUNCTION`)
+✅ Deployed!
+CDYJHR5IO4D7G5ZFCDYR4JVXJAAJ5GHC5IJ74HY7CO547XAOMIYS6DYN
+```
 
 ## License
 
